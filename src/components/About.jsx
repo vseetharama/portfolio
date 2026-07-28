@@ -26,33 +26,32 @@ Tag.displayName = "Tag";
 
 const SOCIAL_LINKS = [
   {
-    href: "https://github.com/shashank2401",
+    href: "https://github.com/vseetharama",
     icon: <Github className="w-5 h-5" />,
     title: "GitHub",
   },
   {
-    href: "https://www.linkedin.com/in/shashankraj2401/",
+    href: "https://www.linkedin.com/in/vseetharamamugeraya/",
     icon: <Linkedin className="w-5 h-5" />,
     title: "LinkedIn",
   },
   {
-    href: "mailto:shashankraj0124@gmail.com",
+    href: "mailto:mugerayaseetharama@gmail.com",
     icon: <Mail className="w-5 h-5" />,
     title: "Email",
   },
 ];
 
 const TAGS = [
-  "Competitive Programming",
-  "Data Structures",
-  "Algorithms",
-  "C++",
+  "AI & Machine Learning",
+  "Computer Vision",
+  "Full Stack Development",
   "Problem Solving",
-  "Web Development",
+  "Backend Engineering",
+  "Modern Web Development",
 ];
 
-const RESUME_URL =
-  "https://drive.google.com/file/d/1FIq3CNO73-M9GXjIhZAYo49gQGxgmudO/view?usp=sharing";
+const RESUME_URL = "/resume/V_Seetharama_Mugeraya_Resume.pdf";
 
 export default memo(function About() {
   const socialLinksElements = useMemo(
@@ -89,11 +88,11 @@ export default memo(function About() {
           transition={{ duration: 0.6 }}
           className="flex-shrink-0 w-40 h-40 sm:w-56 sm:h-56 rounded-full overflow-hidden border-4 border-white dark:border-neutral-900 shadow-md bg-neutral-200 dark:bg-neutral-800"
           tabIndex={0}
-          aria-label="Profile photo of Shashank Raj"
+          aria-label="Profile photo of V Seetharama Mugeraya"
         >
           <img
             src="/assets/MyPhotograph.png"
-            alt="Shashank Raj"
+            alt="V Seetharama Mugeraya"
             loading="lazy"
             decoding="async"
             className="object-cover w-full h-full"
@@ -118,24 +117,20 @@ export default memo(function About() {
           <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-3 text-foreground text-center md:text-left">
             Hi, I'm{" "}
             <span className="bg-gradient-to-r from-neutral-800 via-neutral-700 to-neutral-600 dark:from-white dark:via-neutral-300 dark:to-neutral-400 bg-clip-text text-transparent">
-              Shashank Raj
+              V Seetharama Mugeraya
             </span>
           </h1>
 
           <div className="flex items-center justify-center md:justify-start gap-2 text-muted-foreground text-sm mb-2">
             <GraduationCap className="w-4 h-4" />
-            <span>IIT (BHU) Varanasi</span>
+            <span>SMVITM, Karkala, Karnataka</span>
           </div>
 
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl mb-4 text-center md:text-left">
-            I'm a passionate student with a strong interest in{" "}
+            I'm a passionate <span className="text-foreground font-medium">Computer Science Engineering student</span> specializing in{" "}
             <span className="text-foreground font-medium">
-              competitive programming
-            </span>{" "}
-            and tackling challenging problems. I love crafting efficient
-            solutions and exploring new technologies. My journey in tech
-            combines rigorous academic training with hands-on project
-            experience.
+              Artificial Intelligence, Machine Learning, and Computer Vision
+            </span>. I love building intelligent software systems that solve real-world problems. My journey combines rigorous academic training with hands-on full-stack development experience.
           </p>
 
           <div className="flex flex-wrap gap-2 mb-4 justify-center md:justify-start">

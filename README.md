@@ -1,14 +1,14 @@
-# Personal Portfolio Website - Shashank Raj
+# Personal Portfolio Website - V Seetharama Mugeraya
 
-A clean, modern, and highly performant personal portfolio website built with **React**, **Vite**, **Tailwind CSS**, and **Framer Motion**. This template is designed to be easily customizable and showcases a professional, animation-rich user interface.
+A clean, modern, and highly performant personal portfolio website built with **React**, **Vite**, **Tailwind CSS**, and **Framer Motion**. This portfolio showcases AI/ML expertise, full-stack development skills, and competitive achievements. It demonstrates engineering excellence through design and interactivity.
 
-It features a multi-page architecture with dedicated sections for an introduction, skills, education, projects, competitive programming achievements, and a functional contact form.
+It features a multi-page architecture with dedicated sections for an introduction, technical skills, education, AI/ML projects, competitive programming achievements, and a functional contact form.
 
 ---
 
 ## 🚀 Live Demo
 
-[**View Portfolio on Vercel**](https://shashank-raj-portfolio.vercel.app)
+[**View Portfolio on Vercel**](#) (Deploy your portfolio and add link here)
 
 ---
 
@@ -55,7 +55,7 @@ Make sure you have Node.js and npm installed on your machine.
 
 1.  Clone the repo
     ```sh
-    git clone https://github.com/shashank2401/react-vite-tailwind-portfolio-template.git
+    git clone https://github.com/vseetharama/portfolio.git
     ```
 2.  Install NPM packages
     ```sh
@@ -98,4 +98,4 @@ src/
 
 ## ✒️ Author
 
-**Shashank Raj**
+**V Seetharama Mugeraya**

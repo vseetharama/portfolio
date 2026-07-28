@@ -1,5 +1,5 @@
 import React, { useState, memo } from "react";
-import { Mail, Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Mail, Send, CheckCircle2, AlertCircle, Loader2, Linkedin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -129,15 +129,26 @@ function ContactComponent() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <a
-            href="mailto:shashankraj0124@gmail.com"
-            className="flex justify-center items-center gap-2 text-primary text-lg font-medium hover:underline transition-colors duration-200"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Mail className="w-5 h-5" />
-            shashankraj0124@gmail.com
-          </a>
+          <div className="flex flex-col items-center gap-4">
+            <a
+              href="mailto:mugerayaseetharama@gmail.com"
+              className="flex justify-center items-center gap-2 text-primary text-lg font-medium hover:underline transition-colors duration-200"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Mail className="w-5 h-5" />
+              mugerayaseetharama@gmail.com
+            </a>
+            <a
+              href="https://www.linkedin.com/in/vseetharamamugeraya/"
+              className="flex justify-center items-center gap-2 text-primary text-lg font-medium hover:underline transition-colors duration-200"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Linkedin className="w-5 h-5" />
+              Connect on LinkedIn
+            </a>
+          </div>
         </motion.div>
 
         <motion.form

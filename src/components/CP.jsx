@@ -86,19 +86,17 @@ HighlightItem.displayName = "HighlightItem";
 // --- Main Component ---
 function CompetitiveProgrammingComponent() {
   const cpPlatforms = useMemo(() => [
-    { name: "Codeforces", logo: "/assets/logos/codeforces.png", handle: "shashank2401", profileUrl: "https://codeforces.com/profile/shashank2401", stats: [{ label: "Max Rating", value: "1600" }, { label: "Rank", value: "Expert" }] },
-    { name: "CodeChef", logo: "/assets/logos/codechef.svg", handle: "shashankraj24", profileUrl: "https://www.codechef.com/users/shashankraj24", stats: [{ label: "Max Rating", value: "1954" }, { label: "Rank", value: "4-Star" }] },
-    { name: "LeetCode", logo: "/assets/logos/leetcode.png", handle: "shashank2401", profileUrl: "https://leetcode.com/u/shashank2401/", stats: [{ label: "Max Rating", value: "2022" }, { label: "Badge", value: "Knight" }] },
-    { name: "AtCoder", logo: "/assets/logos/atcoder.png", handle: "shashank24", profileUrl: "https://atcoder.jp/users/shashank24", stats: [{ label: "Max Rating", value: "927" }, { label: "Rank", value: "6 Kyu" }] },
+    { name: "Codeforces", logo: "/assets/logos/codeforces.png", handle: "TBD", profileUrl: "#", stats: [{ label: "Max Rating", value: "TBD" }, { label: "Rank", value: "TBD" }] },
+    { name: "CodeChef", logo: "/assets/logos/codechef.svg", handle: "TBD", profileUrl: "#", stats: [{ label: "Max Rating", value: "TBD" }, { label: "Rank", value: "TBD" }] },
+    { name: "LeetCode", logo: "/assets/logos/leetcode.png", handle: "TBD", profileUrl: "#", stats: [{ label: "Max Rating", value: "TBD" }, { label: "Badge", value: "TBD" }] },
+    { name: "AtCoder", logo: "/assets/logos/atcoder.png", handle: "TBD", profileUrl: "#", stats: [{ label: "Max Rating", value: "TBD" }, { label: "Rank", value: "TBD" }] },
   ], []);
 
   const highlights = useMemo(() => [
-    { text: "Solved over ", linkText: "900+ problems", href: "https://codolio.com/profile/shashank24", rest: " across multiple CP platforms, enhancing algorithmic thinking and coding efficiency." },
-    { text: "Participated in more than ", linkText: "100 contests", href: "https://codolio.com/profile/shashank24", rest: ", consistently testing and improving my problem-solving skills." },
-    { text: "Ranked among the top with a ", linkText: "Global Rank of 755", href: "https://codeforces.com/contest/2114/standings/participant/211255102#p211255102", rest: " in Codeforces Round 1027 (Div. 3)." },
-    { text: "Achieved a notable ", linkText: "Global Rank of 849", href: "https://codeforces.com/contest/2090/standings/participant/206688395#p206688395", rest: " in Codeforces Round 1012 (Div. 2)." },
-    { text: "Earned a ", linkText: "Top 100 finish (Rank 99)", href: "https://www.codechef.com/rankings/START154D?itemsPerPage=100&order=asc&page=1&sortBy=rank", rest: " in CodeChef Starters 154 (Div. 4)." },
-    { text: "Demonstrated strong performance with a ", linkText: "Global Rank of 120", href: "https://www.codechef.com/rankings/START187B?itemsPerPage=100&order=asc&page=1&sortBy=rank", rest: " in CodeChef Starters 187 (Div. 2)." },
+    { text: "Active on Kaggle, participating in machine learning and AI competitions with focus on ", linkText: "real-world problem solving", href: "https://www.kaggle.com/seetharamamugerayav", rest: "." },
+    { text: "Passionate about ", linkText: "competitive programming", href: "https://x.com/vseetharama17", rest: " with continuous focus on algorithm optimization and problem-solving excellence." },
+    { text: "Building AI and ML solutions with deep learning frameworks, focusing on ", linkText: "Computer Vision and NLP applications", href: "#", rest: "." },
+    { text: "Experienced in ", linkText: "full-stack development", href: "#", rest: " with modern tech stacks and cloud deployments." },
   ], []);
 
   return (
@@ -139,8 +137,8 @@ function CompetitiveProgrammingComponent() {
               Key Highlights
             </h3>
             <p className="text-base text-muted-foreground mb-4">
-              <a href="https://codolio.com/profile/shashank24" className="text-primary hover:underline dark:hover:text-primary-foreground/70 transition font-medium" target="_blank" rel="noopener noreferrer">
-                View my Codolio Profile for more details
+              <a href="https://www.kaggle.com/seetharamamugerayav" className="text-primary hover:underline dark:hover:text-primary-foreground/70 transition font-medium" target="_blank" rel="noopener noreferrer">
+                View my Kaggle Profile for more details
               </a>
             </p>
             <motion.ul

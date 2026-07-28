@@ -86,10 +86,12 @@ SkillSection.displayName = "SkillSection";
 
 // --- Static Data (No changes needed) ---
 const SKILLS_SECTIONS = [
-    { icon: <Code className="w-6 h-6" />, title: "Programming Languages", tags: ["C", "C++", "Java", "JavaScript", "Python", "HTML", "CSS"] },
-    { icon: <Layers className="w-6 h-6" />, title: "Frameworks & Libraries", tags: ["React", "Tailwind CSS", "SFML", "NumPy", "Pandas"] },
-    { icon: <Terminal className="w-6 h-6" />, title: "Tools & Platforms", tags: ["Git", "GitHub", "VS Code", "Jupyter Notebook", "Sublime Text"] },
-    { icon: <Sparkles className="w-6 h-6" />, title: "Interests", tags: ["Competitive Programming", "DSA", "Machine Learning", "Web Development"] },
+    { icon: <Code className="w-6 h-6" />, title: "Programming Languages", tags: ["Python", "Java", "C", "C++", "JavaScript", "TypeScript"] },
+    { icon: <Layers className="w-6 h-6" />, title: "Frontend & UI", tags: ["React.js", "Next.js", "Vite", "Tailwind CSS", "Bootstrap", "HTML5", "CSS3"] },
+    { icon: <Terminal className="w-6 h-6" />, title: "Backend & Databases", tags: ["Node.js", "Express.js", "FastAPI", "Flask", "MongoDB", "MySQL", "SQLite"] },
+    { icon: <Sparkles className="w-6 h-6" />, title: "AI/ML & Computer Vision", tags: ["Machine Learning", "Deep Learning", "YOLO", "OpenCV", "TensorFlow", "Scikit-learn", "RAG"] },
+    { icon: <Settings2 className="w-6 h-6" />, title: "Tools & Developer Stack", tags: ["Git", "GitHub", "VS Code", "Postman", "Google Colab", "Jupyter Notebook", "Vercel", "Render"] },
+    { icon: <Code className="w-6 h-6" />, title: "Modern Libraries & Frameworks", tags: ["Framer Motion", "Sentence Transformers", "NumPy", "Pandas", "Matplotlib", "FAISS"] },
 ];
 
 
