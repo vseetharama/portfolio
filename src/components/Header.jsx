@@ -21,7 +21,6 @@ const navLinks = [
   { to: "/skills", label: "Skills" },
   { to: "/academics", label: "Education" },
   { to: "/projects", label: "Projects" },
-  { to: "/cp", label: "CP" },
   { to: "/contact", label: "Contact" },
 ];
 
