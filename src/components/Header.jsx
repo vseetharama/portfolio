@@ -1,17 +1,18 @@
 import React, { memo, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Sun, Moon, Menu } from "lucide-react";
+import { Sun, Moon, Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const headerVariants = {
-  hidden: { y: -100, opacity: 0 },
+  hidden: { y: -20, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
     transition: {
       type: "spring",
-      stiffness: 120,
-      damping: 20,
+      stiffness: 100,
+      damping: 15,
+      mass: 0.5,
     },
   },
 };
@@ -41,58 +42,74 @@ const Header = memo(({ toggleTheme, currentTheme, onHamburgerClick }) => {
       variants={headerVariants}
       initial="hidden"
       animate="visible"
-      className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 sm:px-8 py-4 bg-muted/70 dark:bg-muted/50 backdrop-blur-md shadow-md border-b border-border/40"
+      className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 sm:px-8 py-5 bg-background/85 backdrop-blur-xl border-b border-border/50"
       style={{ willChange: "transform", transform: "translate3d(0, 0, 0)" }}
     >
-      {/* THE FIX: Changed Link to point to "/" */}
-      <Link to="/" className="text-2xl sm:text-3xl font-extrabold text-primary tracking-wide select-none hover:opacity-80 transition">
-        V Seetharama Mugeraya
+      {/* Logo */}
+      <Link 
+        to="/" 
+        className="text-xl sm:text-2xl font-bold tracking-tight select-none group relative"
+      >
+        <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          VSM
+        </span>
+        <motion.div
+          className="absolute inset-0 rounded-lg -z-10"
+          whileHover={{ boxShadow: "0 0 20px rgba(59, 130, 246, 0.2)" }}
+        />
       </Link>
 
-      <nav className="hidden min-[935px]:flex gap-2 sm:gap-4 md:gap-6 items-center">
+      {/* Desktop Navigation */}
+      <nav className="hidden lg:flex items-center gap-2">
         {navLinks.map(link => {
-          // THE FIX: Check for both '/' and '/about' to highlight the "About" link
           const isActive = location.pathname === link.to || (link.to === '/about' && location.pathname === '/');
           return (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`px-3 py-1.5 rounded-md text-base font-medium transition-colors duration-150
-                ${isActive
-                  ? "text-primary bg-primary/10 dark:bg-primary/20"
-                  : "text-muted-foreground hover:text-primary hover:bg-primary/5"}`}
-            >
-              {link.label}
-            </Link>
+            <motion.div key={link.to} whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                to={link.to}
+                className={`relative px-4 py-3 text-lg font-semibold transition-colors duration-200 ${
+                  isActive 
+                    ? 'text-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-primary to-secondary rounded-full"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </Link>
+            </motion.div>
           );
         })}
-        <button
-          onClick={handleThemeToggle}
-          type="button"
-          className="ml-2 p-2 rounded-full text-muted-foreground hover:text-primary transition-transform duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 will-change-transform"
-          aria-label={themeAriaLabel}
-        >
-          <ThemeIcon className="w-6 h-6" />
-        </button>
       </nav>
 
-      <div className="flex max-[934px]:flex hidden items-center gap-2">
-        <button
+      {/* Right: Theme Toggle & Hamburger */}
+      <div className="flex items-center gap-2">
+        <motion.button
           onClick={handleThemeToggle}
           type="button"
-          className="p-2 rounded-full text-muted-foreground hover:text-primary transition-transform duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 will-change-transform"
+          className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all"
           aria-label={themeAriaLabel}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <ThemeIcon className="w-6 h-6" />
-        </button>
-        <button
+          <ThemeIcon className="w-5 h-5" />
+        </motion.button>
+
+        <motion.button
           type="button"
           onClick={onHamburgerClick}
           aria-label="Open menu"
-          className="ml-1 flex items-center justify-center w-14 h-14 rounded-full hover:bg-primary/10 active:scale-95 transition"
+          className="lg:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-all"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <Menu className="w-9 h-9 text-primary" />
-        </button>
+          <Menu className="w-5 h-5" />
+        </motion.button>
       </div>
     </motion.header>
   );

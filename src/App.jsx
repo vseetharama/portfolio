@@ -3,6 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "r
 import { AnimatePresence, motion } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 
+// Import animation components
+import AnimatedGrid from './components/animations/AnimatedGrid';
+import RadialGlow from './components/animations/RadialGlow';
+import GradientOrbs from './components/animations/GradientOrbs';
+import { useReducedMotion } from './hooks/useReducedMotion';
+
 // Import components
 import Layout from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
@@ -14,50 +20,6 @@ import Academics from "./components/Academics";
 import Projects from "./components/Projects";
 import EngineeringDashboard from "./components/EngineeringDashboard";
 import Contact from "./components/Contact";
-
-
-// --- NEW AWESOME BACKGROUND ---
-// This new background uses layered CSS gradients to create a subtle, professional blueprint/grid effect.
-// It's static, lightweight, and adapts to both light and dark modes.
-export const StaticBackground = memo(({ theme }) => {
-  // Define styles for both themes using HSL colors for easy adjustments
-  const lightStyles = {
-    backgroundColor: 'hsl(210, 40%, 98%)', // A very light, clean, off-white
-    backgroundImage: `
-      /* Faint, large radial gradients for a subtle glow effect */
-      radial-gradient(ellipse at 10% 10%, hsla(210, 100%, 94%, 0.5), transparent),
-      radial-gradient(ellipse at 90% 90%, hsla(240, 100%, 94%, 0.5), transparent),
-      /* The main grid pattern */
-      linear-gradient(hsl(210, 40%, 96%) 1.5px, transparent 1.5px),
-      linear-gradient(to right, hsl(210, 40%, 96%) 1.5px, hsl(210, 40%, 98%) 1.5px)
-    `,
-    backgroundSize: '40px 40px',
-  };
-
-  const darkStyles = {
-    backgroundColor: 'hsl(222, 47%, 11%)', // A deep, professional navy blue
-    backgroundImage: `
-      /* Faint, large radial gradients for a subtle glow effect */
-      radial-gradient(ellipse at 10% 10%, hsla(212, 96%, 15%, 0.8), transparent),
-      radial-gradient(ellipse at 90% 90%, hsla(260, 90%, 20%, 0.5), transparent),
-      /* The main grid pattern */
-      linear-gradient(hsla(222, 47%, 13%, 1) 1.5px, transparent 1.5px),
-      linear-gradient(to right, hsla(222, 47%, 13%, 1) 1.5px, hsl(222, 47%, 11%) 1.5px)
-    `,
-    backgroundSize: '40px 40px',
-  };
-
-  // Select the appropriate styles based on the current theme
-  const styles = theme === 'light' ? lightStyles : darkStyles;
-
-  return (
-    <div
-      className="fixed inset-0 -z-50 pointer-events-none transition-colors duration-500"
-      style={styles}
-    />
-  );
-});
-StaticBackground.displayName = "StaticBackground";
 
 
 // --- ANIMATION LOGIC ---
@@ -103,6 +65,7 @@ function App() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
   const [sideNavOpen, setSideNavOpen] = useState(false);
+  const { reducedMotion } = useReducedMotion();
 
   useEffect(() => {
     document.documentElement.classList.remove("light", "dark");
@@ -117,6 +80,12 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      
+      {/* Premium Animation Background Layers */}
+      <AnimatedGrid theme={theme} />
+      <RadialGlow reducedMotion={reducedMotion} theme={theme} />
+      <GradientOrbs reducedMotion={reducedMotion} theme={theme} />
+      
       <Layout 
         theme={theme} 
         toggleTheme={toggleTheme} 

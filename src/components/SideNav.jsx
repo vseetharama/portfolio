@@ -13,12 +13,12 @@ import { Link, useLocation } from "react-router-dom";
 
 // Move static data outside component
 const navLinks = [
-  { to: "/about", icon: User, text: "About" },
-  { to: "/skills", icon: BrainCircuit, text: "Skills" },
-  { to: "/academics", icon: GraduationCap, text: "Education" },
-  { to: "/projects", icon: FolderKanban, text: "Projects" },
-  { to: "/dashboard", icon: Code2, text: "Engineering Profile" },
-  { to: "/contact", icon: Mail, text: "Contact" },
+  { to: "/about", icon: User, text: "About", color: "text-blue-400" },
+  { to: "/skills", icon: BrainCircuit, text: "Skills", color: "text-purple-400" },
+  { to: "/academics", icon: GraduationCap, text: "Education", color: "text-emerald-400" },
+  { to: "/projects", icon: FolderKanban, text: "Projects", color: "text-amber-400" },
+  { to: "/dashboard", icon: Code2, text: "Engineering Profile", color: "text-cyan-400" },
+  { to: "/contact", icon: Mail, text: "Contact", color: "text-red-400" },
 ];
 
 // Animation variants
@@ -55,7 +55,7 @@ const itemVariants = {
 
 const overlayVariants = {
   hidden: { opacity: 0, pointerEvents: "none" },
-  visible: { opacity: 0.4, pointerEvents: "auto" },
+  visible: { opacity: 0.5, pointerEvents: "auto" },
 };
 
 // Memoized nav item component
@@ -66,13 +66,21 @@ const NavItem = memo(({ link, onNavClick, isActive }) => {
       <Link
         to={link.to}
         onClick={onNavClick}
-        className={`flex flex-row items-center justify-start gap-4 text-lg font-medium transition-colors duration-200 py-2 w-full
-          ${isActive ? "text-primary" : "text-foreground hover:text-primary"}
-        `}
-        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+        className={`flex items-center gap-4 px-4 py-3 rounded-lg font-medium transition-all duration-300 group relative overflow-hidden ${
+          isActive
+            ? "bg-primary/10 text-primary border border-primary/30"
+            : "text-muted-foreground hover:text-foreground"
+        }`}
       >
-        <Icon className="w-5 h-5 flex-shrink-0" style={{ display: 'inline-block' }} />
-        <span className="leading-none" style={{ display: 'inline-block' }}>{link.text}</span>
+        {/* Background animation on hover */}
+        {!isActive && (
+          <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        )}
+
+        <div className="relative flex items-center gap-4 w-full">
+          <Icon className={`w-5 h-5 flex-shrink-0 ${link.color}`} />
+          <span className="leading-none">{link.text}</span>
+        </div>
       </Link>
     </motion.li>
   );
@@ -129,10 +137,6 @@ const SideNav = memo(({ open, onClose }) => {
         transition={{ duration: 0.3 }}
         className="fixed inset-0 bg-black z-40 lg:hidden"
         onClick={onClose}
-        style={{
-          willChange: "opacity",
-          transform: "translate3d(0, 0, 0)"
-        }}
       />
 
       {/* Navigation Panel */}
@@ -140,28 +144,49 @@ const SideNav = memo(({ open, onClose }) => {
         initial={false}
         animate={open ? "open" : "closed"}
         variants={navVariants}
-        className="side-nav-panel fixed top-0 right-0 w-[270px] h-screen bg-card shadow-lg z-50 flex flex-col p-6 pt-8"
+        className="side-nav-panel fixed top-0 right-0 w-[280px] h-screen bg-card/95 border-l border-border/50 backdrop-blur-lg z-50 flex flex-col p-6 pt-8 shadow-2xl"
         aria-label="Main Navigation"
-        style={{
-          willChange: "transform, opacity",
-          transform: "translate3d(0, 0, 0)"
-        }}
       >
         {/* Close Button */}
         <motion.button
           variants={itemVariants}
-          className="self-end text-muted-foreground hover:text-primary transition-all duration-300 hover:rotate-90 cursor-pointer p-2 -mr-2 mb-8 will-change-transform"
+          className="self-end mb-8 p-2 -mr-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-300 group"
           aria-label="Close Menu"
           type="button"
           onClick={onClose}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <X className="w-7 h-7" />
+          <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
         </motion.button>
 
         {/* Navigation Links */}
-        <ul className="flex-1 space-y-6">
+        <ul className="flex-1 space-y-3">
           {navItems}
         </ul>
+
+        {/* Footer Section in SideNav */}
+        <motion.div
+          variants={itemVariants}
+          className="pt-6 border-t border-border/30 space-y-3 text-sm text-muted-foreground"
+        >
+          <p className="text-xs font-semibold uppercase tracking-widest">Quick Links</p>
+          <a
+            href="/resume/V_Seetharama_Mugeraya_Resume.pdf"
+            download
+            className="flex items-center gap-2 hover:text-primary transition-colors duration-200"
+          >
+            Download Resume →
+          </a>
+          <a
+            href="https://github.com/vseetharama"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-primary transition-colors duration-200"
+          >
+            GitHub Profile →
+          </a>
+        </motion.div>
       </motion.nav>
     </>
   );

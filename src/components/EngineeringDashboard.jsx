@@ -32,26 +32,34 @@ const itemVariants = {
 const FeatureCard = React.memo(({ feature }) => (
   <motion.div
     variants={itemVariants}
-    className="bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 rounded-2xl shadow p-6 flex flex-col h-full"
+    whileHover={{ y: -8, boxShadow: "0 30px 60px rgba(0,0,0,0.2)" }}
+    className="group relative bg-card border border-border rounded-2xl p-6 flex flex-col h-full transition-all duration-300 overflow-hidden"
   >
-    <div className="flex items-start gap-4 mb-4">
-      <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 flex-shrink-0">
+    {/* Gradient background */}
+    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+    
+    <div className="relative z-10 flex items-start gap-4 mb-4">
+      <motion.div
+        className="p-3 rounded-lg bg-primary/10 flex-shrink-0"
+        whileHover={{ scale: 1.1, rotate: 5 }}
+      >
         <feature.icon className="w-6 h-6 text-primary" />
-      </div>
+      </motion.div>
       <div>
-        <h3 className="text-lg font-semibold text-foreground">{feature.title}</h3>
+        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{feature.title}</h3>
         <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
       </div>
     </div>
     {feature.items && (
-      <div className="flex flex-wrap gap-2 mt-4">
+      <div className="relative z-10 flex flex-wrap gap-2 mt-4">
         {feature.items.map((item, idx) => (
-          <span
+          <motion.span
             key={idx}
-            className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20"
+            whileHover={{ scale: 1.05, y: -2 }}
+            className="px-3 py-1 rounded-lg text-xs font-semibold bg-primary/10 text-primary border border-primary/20"
           >
             {item}
-          </span>
+          </motion.span>
         ))}
       </div>
     )}
@@ -285,29 +293,44 @@ function EngineeringProfile() {
   ], []);
 
   return (
-    <div className="w-full flex flex-col items-center px-4 py-12">
+    <div className="w-full relative px-4 sm:px-8 py-20">
       <motion.div
         variants={sectionContainerVariants}
         initial="hidden"
-        animate="visible"
-        className="flex flex-col items-center w-full space-y-16"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="flex flex-col items-center w-full max-w-7xl mx-auto space-y-20"
       >
         {/* Header Section */}
-        <motion.div variants={itemVariants} className="flex flex-col items-center text-center max-w-2xl">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight flex flex-col sm:flex-row items-center sm:items-baseline justify-center gap-2 sm:gap-4 text-foreground text-center">
-            <Code2 className="w-8 h-8 text-primary drop-shadow-sm flex-shrink-0" />
-            <span>Engineering Profile</span>
+        <motion.div 
+          variants={itemVariants} 
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15 }}
+            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-6 mx-auto"
+          >
+            <Code2 className="w-8 h-8 text-primary" />
+          </motion.div>
+          
+          <h2 className="text-5xl sm:text-6xl font-bold mb-6 leading-tight">
+            <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+              Engineering Profile
+            </span>
           </h2>
+          
           <p className="text-lg text-muted-foreground">
-            A snapshot of my technical expertise, engineering capabilities, projects, achievements, and certifications across Artificial Intelligence, Machine Learning, Computer Vision, Backend Engineering, and Full-Stack Development.
+            A comprehensive showcase of my technical expertise, engineering capabilities, achievements, and professional growth across AI/ML, Computer Vision, Backend Engineering, and Full-Stack Development.
           </p>
         </motion.div>
 
         {/* Engineering Capabilities Section */}
-        <motion.div variants={itemVariants} className="w-full max-w-5xl">
+        <motion.div variants={itemVariants} className="w-full">
           <motion.div
             variants={listContainerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full"
           >
             {features.map((feature) => (
               <FeatureCard key={feature.title} feature={feature} />
@@ -316,23 +339,31 @@ function EngineeringProfile() {
         </motion.div>
 
         {/* Key Achievements Section */}
-        <motion.div variants={itemVariants} className="w-full max-w-3xl">
-          <div className="bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 rounded-2xl shadow p-6">
-            <h3 className="text-2xl font-semibold text-foreground mb-6">Key Achievements</h3>
-            <motion.div
-              variants={listContainerVariants}
-              className="space-y-4"
-            >
-              {achievements.map((achievement, index) => (
-                <motion.div key={index} variants={itemVariants} className="flex gap-4 pb-4 border-b border-border/40 last:border-b-0">
-                  <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
-                  <div>
-                    <h4 className="font-semibold text-foreground">{achievement.title}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">{achievement.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+        <motion.div variants={itemVariants} className="w-full">
+          <div className="relative rounded-2xl bg-card border border-border overflow-hidden p-8">
+            {/* Gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
+            
+            <div className="relative z-10">
+              <h3 className="text-2xl font-bold text-foreground mb-8">Key Achievements</h3>
+              <motion.div
+                variants={listContainerVariants}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
+                {achievements.map((achievement, index) => (
+                  <motion.div key={index} variants={itemVariants} className="flex gap-4">
+                    <motion.div
+                      className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2"
+                      whileHover={{ scale: 1.5 }}
+                    />
+                    <div>
+                      <h4 className="font-bold text-foreground">{achievement.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">{achievement.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
           </div>
         </motion.div>
 

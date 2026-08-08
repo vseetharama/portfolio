@@ -1,20 +1,20 @@
 import React, { useState, useCallback, useMemo, memo } from "react";
-import { Code, Layers, Terminal, Sparkles, Settings2 } from "lucide-react";
+import { Code, Layers, Terminal, Sparkles, Settings2, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import CardHover from "./animations/CardHover";
+import ScrollReveal from "./animations/ScrollReveal";
 
-// --- Animation Variants (The "Staggered Entrance" Pattern) ---
-// This container will orchestrate the animation for the whole page
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15, // Time delay between each child animating in
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
     },
   },
 };
 
-// This variant will be used by each item in the container
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -27,20 +27,22 @@ const itemVariants = {
   },
 };
 
-// --- Child Components (No changes needed) ---
-const SkillTag = memo(({ tag, onMouseEnter, onMouseLeave, className }) => (
-  <span
-    onMouseEnter={onMouseEnter}
-    onMouseLeave={onMouseLeave}
-    className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors duration-150 ${className} text-neutral-800 dark:text-neutral-200 border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-700`}
+const SkillTag = memo(({ tag, isHovered }) => (
+  <motion.span
+    whileHover={{ scale: 1.05, y: -2 }}
+    className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
+      isHovered
+        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+        : "bg-card border border-border text-muted-foreground"
+    }`}
   >
     {tag}
-  </span>
+  </motion.span>
 ));
 SkillTag.displayName = "SkillTag";
 
 const SkillSection = memo(({ section, hoveredTag, onTagHover, onTagLeave }) => {
-  const { icon, title, tags } = section;
+  const { icon: Icon, title, tags, color } = section;
 
   const tagElements = useMemo(
     () =>
@@ -51,11 +53,7 @@ const SkillSection = memo(({ section, hoveredTag, onTagHover, onTagLeave }) => {
           <SkillTag
             key={tag}
             tag={tag}
-            className={
-              isHovered
-                ? "bg-neutral-200 dark:bg-neutral-700"
-                : "bg-neutral-100 dark:bg-neutral-800"
-            }
+            isHovered={isHovered}
             onMouseEnter={() => onTagHover(tagId)}
             onMouseLeave={onTagLeave}
           />
@@ -65,82 +63,89 @@ const SkillSection = memo(({ section, hoveredTag, onTagHover, onTagLeave }) => {
   );
 
   return (
-    // This card is now an item in the grid's stagger animation
-    <motion.div
-      variants={itemVariants}
-      className="rounded-2xl bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 shadow p-6 flex flex-col"
-    >
-      <div className="flex items-center gap-3 mb-5">
-        <div className="p-3 rounded-xl bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 shadow-sm">
-          {icon}
+    <CardHover>
+      <motion.div
+        variants={itemVariants}
+        whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.2)" }}
+        className="group relative rounded-2xl bg-card border border-border overflow-hidden p-6 flex flex-col h-full transition-all duration-300"
+      >
+        {/* Background gradient on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+        <div className="relative z-10 flex items-start gap-4 mb-5">
+          <motion.div
+            className={`p-3 rounded-lg bg-${color}/10 flex-shrink-0`}
+            whileHover={{ scale: 1.1, rotate: 10 }}
+          >
+            <Icon className={`w-6 h-6 text-${color}`} />
+          </motion.div>
+          <h3 className="text-lg font-bold text-foreground">{title}</h3>
         </div>
-        <h3 className="text-xl font-semibold text-neutral-800 dark:text-neutral-100">
-          {title}
-        </h3>
-      </div>
-      <div className="flex flex-wrap gap-3">{tagElements}</div>
-    </motion.div>
+
+        <div className="relative z-10 flex flex-wrap gap-2">
+          {tagElements}
+        </div>
+      </motion.div>
+    </CardHover>
   );
 });
 SkillSection.displayName = "SkillSection";
 
-// --- Static Data (No changes needed) ---
 const SKILLS_SECTIONS = [
-    { icon: <Code className="w-6 h-6" />, title: "Programming Languages", tags: ["Python", "Java", "C", "C++", "JavaScript", "TypeScript"] },
-    { icon: <Layers className="w-6 h-6" />, title: "Frontend & UI", tags: ["React.js", "Next.js", "Vite", "Tailwind CSS", "Bootstrap", "HTML5", "CSS3"] },
-    { icon: <Terminal className="w-6 h-6" />, title: "Backend & Databases", tags: ["Node.js", "Express.js", "FastAPI", "Flask", "MongoDB", "MySQL", "SQLite"] },
-    { icon: <Sparkles className="w-6 h-6" />, title: "AI/ML & Computer Vision", tags: ["Machine Learning", "Deep Learning", "YOLO", "OpenCV", "TensorFlow", "Scikit-learn", "RAG"] },
-    { icon: <Settings2 className="w-6 h-6" />, title: "Tools & Developer Stack", tags: ["Git", "GitHub", "VS Code", "Postman", "Google Colab", "Jupyter Notebook", "Vercel", "Render"] },
-    { icon: <Code className="w-6 h-6" />, title: "Modern Libraries & Frameworks", tags: ["Framer Motion", "Sentence Transformers", "NumPy", "Pandas", "Matplotlib", "FAISS"] },
+  { icon: Code, title: "Programming Languages", tags: ["Python", "Java", "C", "C++", "JavaScript", "TypeScript"], color: "primary" },
+  { icon: Layers, title: "Frontend & UI", tags: ["React.js", "Next.js", "Vite", "Tailwind CSS", "Bootstrap", "HTML5", "CSS3"], color: "secondary" },
+  { icon: Terminal, title: "Backend & Databases", tags: ["Node.js", "Express.js", "FastAPI", "Flask", "MongoDB", "MySQL", "SQLite"], color: "accent" },
+  { icon: Sparkles, title: "AI/ML & Computer Vision", tags: ["Machine Learning", "Deep Learning", "YOLO", "OpenCV", "TensorFlow", "Scikit-learn", "RAG"], color: "primary" },
+  { icon: Settings2, title: "Tools & Developer Stack", tags: ["Git", "GitHub", "VS Code", "Postman", "Google Colab", "Jupyter Notebook", "Vercel", "Render"], color: "secondary" },
+  { icon: Zap, title: "Modern Libraries & Frameworks", tags: ["Framer Motion", "Sentence Transformers", "NumPy", "Pandas", "Matplotlib", "FAISS"], color: "accent" },
 ];
 
-
-// --- Main Skills Component ---
 const SkillsComponent = memo(function Skills() {
   const [hoveredTag, setHoveredTag] = useState(null);
   const handleTagHover = useCallback((tagId) => setHoveredTag(tagId), []);
   const handleTagLeave = useCallback(() => setHoveredTag(null), []);
 
   return (
-    <div className="w-full min-h-[80vh] flex flex-col items-center justify-center px-4 py-12">
-      {/* 1. This is the SINGLE animation container for the whole page. */}
-      {/* It uses `animate`, not `whileInView`, for guaranteed execution. */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="flex flex-col items-center w-full"
-      >
-        {/* Item 1: The header text block */}
-        <motion.div variants={itemVariants} className="flex flex-col items-center text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold text-center mb-4 flex items-center gap-4 text-foreground">
-                <Settings2 className="w-8 h-8 sm:w-11 sm:h-11 text-primary drop-shadow-sm" />
-                Skills & Interests
+    <ScrollReveal>
+      <div className="w-full relative px-4 sm:px-8 py-20">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16 text-center"
+          >
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-foreground">
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Technical Arsenal
+              </span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-                Here you'll find a snapshot of my technical toolkit and passions. I
-                believe in learning by doing, and my skills reflect a blend of academic
-                depth and hands-on project work.
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              A comprehensive toolkit spanning AI/ML, full-stack development, and cloud infrastructure.
             </p>
-        </motion.div>
-        
-        {/* Item 2: The entire skill card grid animates in as one block... */}
-        <motion.div
-          variants={containerVariants} // It's also a container for its own children
-          className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8"
-        >
-          {SKILLS_SECTIONS.map((section) => (
-            <SkillSection
-              key={section.title}
-              section={section}
-              hoveredTag={hoveredTag}
-              onTagHover={handleTagHover}
-              onTagLeave={handleTagLeave}
-            />
-          ))}
-        </motion.div>
-      </motion.div>
-    </div>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {SKILLS_SECTIONS.map((section) => (
+              <SkillSection
+                key={section.title}
+                section={section}
+                hoveredTag={hoveredTag}
+                onTagHover={handleTagHover}
+                onTagLeave={handleTagLeave}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </ScrollReveal>
   );
 });
 

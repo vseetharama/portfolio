@@ -1,20 +1,19 @@
 import React, { useMemo, memo } from "react";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import ScrollReveal from "./animations/ScrollReveal";
 
-// --- Animation Variants (The "Staggered Entrance" Pattern) ---
-// This container will orchestrate the animation for the whole page
+// --- Animation Variants ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15, // Time delay between each child animating in
+      staggerChildren: 0.12,
     },
   },
 };
 
-// This variant will be used by each item in the container
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -27,46 +26,73 @@ const itemVariants = {
   },
 };
 
-
-// --- Child Component (No changes needed) ---
-const EducationCard = memo(({ education }) => {
+// --- Education Card Component ---
+const EducationCard = memo(({ education, index }) => {
   const { logo, alt, title, link, program, year, scoreLabel, score } = education;
 
   return (
-    // This card is now an item in the list's stagger animation
     <motion.div
       variants={itemVariants}
-      className="bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 rounded-2xl shadow p-6 flex items-center gap-6"
+      whileHover={{ y: -4 }}
+      className="group relative bg-card/40 border border-border/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:border-primary/30 hover:shadow-lg backdrop-blur-sm overflow-hidden"
     >
-      <div className="w-16 h-16 flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center shadow rounded-xl p-1 overflow-hidden">
-        <img
-          src={logo}
-          alt={alt}
-          className="w-full h-full object-contain rounded-lg"
-          loading="lazy"
-          decoding="async"
-          width={64}
-          height={64}
-          style={{ aspectRatio: "1/1" }}
-        />
-      </div>
-      <div className="flex flex-col text-left gap-1">
-        <h3 className="text-lg sm:text-xl font-semibold text-foreground">{title}</h3>
-        <a
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-primary hover:underline hover:text-foreground dark:hover:text-primary-foreground/70 font-medium transition-colors duration-200"
-        >
-          {program}
-        </a>
-        <div className="text-sm text-muted-foreground mt-2 space-y-1">
-          <p>
-            <span className="font-medium text-foreground/80">Year:</span> {year}
-          </p>
-          <p>
-            <span className="font-medium text-foreground/80">{scoreLabel}:</span> {score}
-          </p>
+      {/* Gradient Background on Hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      {/* Content */}
+      <div className="relative flex flex-col sm:flex-row gap-6">
+        {/* Logo Section */}
+        <div className="flex-shrink-0">
+          <div className="w-24 h-24 rounded-xl bg-background/50 border border-border/30 flex items-center justify-center overflow-hidden group-hover:border-primary/30 transition-colors duration-300 shadow-md">
+            <img
+              src={logo}
+              alt={alt}
+              className="w-full h-full object-contain p-2"
+              loading="lazy"
+              decoding="async"
+              width={96}
+              height={96}
+            />
+          </div>
+        </div>
+
+        {/* Info Section */}
+        <div className="flex-1 flex flex-col justify-between">
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-1 line-clamp-2">
+              {title}
+            </h3>
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold text-sm transition-colors duration-200 mb-4"
+            >
+              {program}
+              <ExternalLink className="w-3 h-3" />
+            </a>
+
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold uppercase tracking-widest mb-1">
+                  Timeline
+                </p>
+                <p className="text-foreground font-medium">{year}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold uppercase tracking-widest mb-1">
+                  {scoreLabel}
+                </p>
+                <p className="text-foreground font-medium flex items-center gap-2">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-primary/20 text-primary text-xs font-bold">
+                    ✓
+                  </span>
+                  {score}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>
@@ -74,15 +100,14 @@ const EducationCard = memo(({ education }) => {
 });
 EducationCard.displayName = "EducationCard";
 
-
-// --- Static Data (No changes needed) ---
+// --- Static Data ---
 const ACADEMICS_DATA = [
   {
     logo: "/assets/logos/smvitmlogo.png",
     alt: "SMVITM Logo",
-    title: "Shri Madhwa Vadiraja Institute of Technology and Management (VTU), Karnataka",
+    title: "Shri Madhwa Vadiraja Institute of Technology and Management (VTU)",
     link: "https://sode-edu.in/smvitm/",
-    program: "Bachelor of Engineering (Computer Science & Engineering)",
+    program: "Bachelor of Engineering • Computer Science & Engineering",
     year: "2023 – 2027",
     scoreLabel: "CGPA",
     score: "8.78 / 10",
@@ -90,9 +115,9 @@ const ACADEMICS_DATA = [
   {
     logo: "/assets/logos/nsampuc-logo.png",
     alt: "N.S.A.M. PU College Logo",
-    title: "Dr. N. S. A. M. PU College, Nitte, Karnataka",
+    title: "Dr. N. S. A. M. PU College",
     link: "https://nitte.edu.in/nsampucn/index.php",
-    program: "Pre-University (PUC)",
+    program: "Pre-University Course",
     year: "2021 – 2023",
     scoreLabel: "Percentage",
     score: "86.5%",
@@ -100,58 +125,61 @@ const ACADEMICS_DATA = [
   {
     logo: "/assets/logos/don_bosco_school.png",
     alt: "Don Bosco School Logo",
-    title: "Don Bosco School, Mulladka, Karnataka",
+    title: "Don Bosco School",
     link: "https://educonnectin.com/schools/karnataka/udupi/bolakodi/don-bosco-english-medium-high-school-mulladka",
-    program: "SSLC",
+    program: "Secondary School Leaving Certificate",
     year: "2020 – 2021",
     scoreLabel: "Percentage",
     score: "80%",
   },
 ];
 
-
 // --- Main Academics Component ---
 const AcademicsComponent = memo(function Academics() {
   const educationCards = useMemo(
     () =>
       ACADEMICS_DATA.map((education, index) => (
-        <EducationCard key={`${education.title}-${index}`} education={education} />
+        <EducationCard key={`${education.title}-${index}`} education={education} index={index} />
       )),
     []
   );
 
   return (
-    <div className="w-full min-h-[80vh] flex flex-col items-center justify-center px-4 py-12">
-      {/* 1. This is the SINGLE animation container for the whole page. */}
-      {/* It uses `animate`, not `whileInView`, for guaranteed execution. */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="flex flex-col items-center w-full"
-      >
-        {/* Item 1: The header text block */}
-        <motion.div variants={itemVariants} className="flex flex-col items-center text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold text-center mb-4 flex items-center gap-4 text-foreground">
-                <GraduationCap className="w-8 h-8 sm:w-11 sm:h-11 text-primary drop-shadow-sm" />
-                Education
-            </h2>
-            <motion.p variants={itemVariants} className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-                My academic journey has been a blend of rigorous learning and practical
-                application, spanning general academics and engineering. Here are the
-                institutions and milestones that have shaped my foundation.
-            </motion.p>
-        </motion.div>
-
-        {/* Item 2: The entire list of education cards */}
+    <ScrollReveal>
+      <div className="w-full min-h-[80vh] flex flex-col items-center justify-center px-4 py-12">
         <motion.div
-          variants={containerVariants} // It's also a container for its own children
-          className="w-full max-w-2xl flex flex-col gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col items-center w-full max-w-4xl"
         >
-          {educationCards}
+          {/* Header */}
+          <motion.div variants={itemVariants} className="flex flex-col items-center text-center mb-12">
+            <motion.div
+              className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20"
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <GraduationCap className="w-8 h-8 text-primary" />
+            </motion.div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+              Education
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              My academic journey has been a blend of rigorous learning and practical application. These institutions have shaped my foundation in computer science and engineering.
+            </p>
+          </motion.div>
+
+          {/* Education Cards Grid */}
+          <motion.div
+            variants={containerVariants}
+            className="w-full flex flex-col gap-6"
+          >
+            {educationCards}
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </ScrollReveal>
   );
 });
 
