@@ -1,25 +1,16 @@
-import { Github, Mail, FileText, ArrowRight, Linkedin } from "lucide-react";
+﻿import { Github, Mail, FileText, ArrowRight, Linkedin, Globe, ArrowUpRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo, memo, useState, useEffect } from "react";
 
-// Animated role titles
+import { portfolioData } from "../data/portfolioData";
+
 const ROLES = [
   "AI Engineer",
   "Machine Learning Engineer",
   "Computer Vision Enthusiast",
-  "Full Stack Developer",
+  "Full-Stack Developer",
 ];
 
-const CURRENT_FOCUS = [
-  "YOLO",
-  "OpenCV",
-  "TensorFlow",
-  "FastAPI",
-  "RAG",
-  "React",
-];
-
-// Memoized social link component
 const SocialLink = memo(({ href, icon: Icon, title, className }) => (
   <motion.a
     href={href}
@@ -27,7 +18,7 @@ const SocialLink = memo(({ href, icon: Icon, title, className }) => (
     rel="noopener noreferrer"
     className={className}
     title={title}
-    whileHover={{ scale: 1.1, y: -2 }}
+    whileHover={{ scale: 1.08, y: -2 }}
     whileTap={{ scale: 0.95 }}
   >
     <Icon className="w-5 h-5" />
@@ -36,26 +27,13 @@ const SocialLink = memo(({ href, icon: Icon, title, className }) => (
 SocialLink.displayName = "SocialLink";
 
 const SOCIAL_LINKS = [
-  {
-    href: "https://github.com/vseetharama",
-    icon: Github,
-    title: "GitHub",
-  },
-  {
-    href: "https://www.linkedin.com/in/vseetharamamugeraya/",
-    icon: Linkedin,
-    title: "LinkedIn",
-  },
-  {
-    href: "mailto:mugerayaseetharama@gmail.com",
-    icon: Mail,
-    title: "Email",
-  },
+  { href: portfolioData.contact.github, icon: Github, title: "GitHub" },
+  { href: portfolioData.contact.linkedin, icon: Linkedin, title: "LinkedIn" },
+  { href: `mailto:${portfolioData.contact.email}`, icon: Mail, title: "Email" },
+  { href: portfolioData.contact.kaggle, icon: Globe, title: "Kaggle" },
+  { href: portfolioData.contact.x, icon: ArrowUpRight, title: "X" },
 ];
 
-const RESUME_URL = "/resume/V_Seetharama_Mugeraya_Resume.pdf";
-
-// Animated role component with smooth transitions
 const AnimatedRole = memo(({ role, index }) => (
   <motion.div
     initial={{ opacity: 0, y: 10 }}
@@ -63,44 +41,21 @@ const AnimatedRole = memo(({ role, index }) => (
     exit={{ opacity: 0, y: -10 }}
     transition={{ duration: 0.4, ease: "easeInOut" }}
     key={index}
-    className="text-4xl sm:text-5xl lg:text-5xl font-bold text-primary"
+    className="text-hero-role text-primary"
   >
     {role}
   </motion.div>
 ));
 AnimatedRole.displayName = "AnimatedRole";
 
-// Focus badge component
-const FocusBadge = memo(({ focus, index }) => (
-  <motion.span
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.9 }}
-    transition={{ duration: 0.3 }}
-    key={index}
-    className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary/10 text-primary border border-primary/30 inline-block whitespace-nowrap"
-  >
-    {focus}
-  </motion.span>
-));
-FocusBadge.displayName = "FocusBadge";
-
 export default memo(function About() {
   const [roleIndex, setRoleIndex] = useState(0);
-  const [focusIndex, setFocusIndex] = useState(0);
 
   useEffect(() => {
     const roleTimer = setInterval(() => {
       setRoleIndex((prev) => (prev + 1) % ROLES.length);
-    }, 4000);
-    return () => clearInterval(roleTimer);
-  }, []);
-
-  useEffect(() => {
-    const focusTimer = setInterval(() => {
-      setFocusIndex((prev) => (prev + 1) % CURRENT_FOCUS.length);
     }, 3500);
-    return () => clearInterval(focusTimer);
+    return () => clearInterval(roleTimer);
   }, []);
 
   const socialLinksElements = useMemo(
@@ -111,7 +66,7 @@ export default memo(function About() {
           href={href}
           icon={icon}
           title={title}
-          className="flex items-center justify-center w-14 h-14 rounded-lg border border-border/50 bg-card/50 hover:border-primary/50 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all duration-300"
+          className="flex items-center justify-center w-12 h-12 rounded-xl border border-border/70 bg-card/70 hover:border-primary/70 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all duration-300"
         />
       )),
     []
@@ -124,52 +79,23 @@ export default memo(function About() {
       transition={{ duration: 0.8 }}
       className="w-full min-h-screen pt-24 pb-12 flex items-center justify-center relative overflow-hidden"
     >
-      {/* Premium background elements */}
       <div className="absolute inset-0">
-        {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
-        
-        {/* Animated grid background */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:5rem_5rem] pointer-events-none" />
-        
-        {/* Subtle glowing blurs */}
-        <motion.div
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.1, 0.15, 0.1]
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-1/4 -left-40 w-80 h-80 bg-primary rounded-full filter blur-3xl"
-        />
-        <motion.div
-          animate={{ 
-            scale: [1, 1.15, 1],
-            opacity: [0.1, 0.12, 0.1]
-          }}
-          transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-          className="absolute bottom-1/4 -right-40 w-96 h-96 bg-secondary rounded-full filter blur-3xl"
-        />
+        <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.08, 0.12, 0.08] }} transition={{ duration: 8, repeat: Infinity }} className="absolute top-1/4 -left-30 w-72 h-72 bg-primary rounded-full filter blur-3xl" />
+        <motion.div animate={{ scale: [1, 1.12, 1], opacity: [0.08, 0.12, 0.08] }} transition={{ duration: 10, repeat: Infinity, delay: 1 }} className="absolute bottom-1/4 -right-32 w-80 h-80 bg-secondary rounded-full filter blur-3xl" />
       </div>
 
-      {/* Main content */}
       <div className="relative z-10 w-full max-w-7xl px-4 sm:px-8">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
-          {/* Left: Content Section */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="flex-1 space-y-8"
-          >
-            {/* Primary Heading: Name */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-4"
-            >
-              <h1 className="text-7xl sm:text-8xl lg:text-[88px] font-bold leading-tight text-foreground tracking-tight">
-                V Seetharama<br />Mugeraya
+          <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.1 }} className="flex-1 space-y-8">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                <Sparkles className="w-3.5 h-3.5" />
+                Available for opportunities
+              </div>
+              <h1 className="text-hero-title leading-tight text-foreground tracking-tight">
+                V Seetharama <span className="text-primary">Mugeraya</span>
               </h1>
               <div className="h-16 sm:h-20 lg:h-24">
                 <AnimatePresence mode="wait">
@@ -178,132 +104,60 @@ export default memo(function About() {
               </div>
             </motion.div>
 
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-xl sm:text-2xl lg:text-2xl text-muted-foreground max-w-3xl leading-relaxed font-medium"
-            >
-              Building intelligent software systems that solve real-world problems through{" "}
-              <span className="text-foreground font-semibold">AI, Machine Learning, and Computer Vision</span>. 
-              Passionate about creating scalable, production-ready solutions.
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="text-body text-muted-foreground max-w-3xl leading-relaxed font-medium">
+              {portfolioData.intro}
             </motion.p>
 
-            {/* Current Focus Section - Grid Layout */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="space-y-6 pt-4"
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} className="space-y-6 pt-2">
               <div>
-                <p className="text-base font-bold text-muted-foreground uppercase tracking-wider mb-4">Current Focus</p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
-                  {CURRENT_FOCUS.map((focus, idx) => (
-                    <motion.div
+                <p className="text-small font-bold text-muted-foreground uppercase tracking-wider mb-4">Current Focus</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {portfolioData.currentFocus.map((focus, idx) => (
+                    <motion.span
                       key={focus}
-                      initial={{ opacity: 0, scale: 0.9 }}
+                      initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: idx * 0.05 }}
-                      className="px-4 py-3 rounded-lg text-sm font-semibold bg-primary/10 text-primary border border-primary/30 text-center"
+                      transition={{ duration: 0.25, delay: idx * 0.04 }}
+                      className="rounded-lg border border-primary/25 bg-primary/8 px-3 py-1.5 text-sm font-medium text-primary"
                     >
                       {focus}
-                    </motion.div>
+                    </motion.span>
                   ))}
                 </div>
               </div>
             </motion.div>
 
-            {/* CTA Buttons & Social */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-6"
-            >
-              {/* Primary Button */}
-              <motion.a
-                href={RESUME_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 text-lg font-bold rounded-xl bg-primary text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FileText className="w-6 h-6" />
-                <span>Download Resume</span>
-                <ArrowRight className="w-5 h-5" />
-              </motion.a>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }} className="flex flex-wrap items-center gap-4">
+              <a href={portfolioData.resumeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:translate-y-[-2px] transition-all duration-300">
+                <FileText className="w-4 h-4" />
+                View Resume
+              </a>
+              <a href="/contact" className="inline-flex items-center gap-2 rounded-lg border border-border bg-card/60 px-5 py-3 text-sm font-semibold text-foreground hover:border-primary/60 hover:text-primary transition-all duration-300">
+                Contact me
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </motion.div>
 
-              {/* Social Links */}
-              <div className="flex gap-4">
-                {socialLinksElements}
-              </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }} className="flex flex-wrap items-center gap-3">
+              {socialLinksElements}
             </motion.div>
           </motion.div>
 
-          {/* Right: Profile Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex-shrink-0 hidden lg:flex"
-          >
-            <div className="relative w-72 h-72 xl:w-80 xl:h-80">
-              {/* Animated rotating rings */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full border border-primary/15 opacity-60"
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-6 rounded-full border border-secondary/10 opacity-40"
-              />
-
-              {/* Image container with subtle glow */}
-              <div className="absolute inset-0 rounded-full overflow-hidden border-2 border-primary/20 shadow-xl hover:shadow-2xl shadow-primary/20 transition-all duration-300">
-                <motion.img
-                  src="/assets/MyPhotograph.png"
-                  alt="V Seetharama Mugeraya"
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover"
-                  style={{ aspectRatio: "1/1" }}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.4 }}
-                />
-              </div>
-
-              {/* Subtle floating animation */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 rounded-full bg-gradient-to-t from-primary/10 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-              />
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative flex-1 max-w-xl w-full overflow-visible">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[470px] rounded-[2rem] border border-primary/20 bg-card/60 p-3 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
+              <div className="absolute inset-4 rounded-[1.6rem] border border-primary/10" />
+              <img src="/assets/MyPhotograph.png" alt="V Seetharama Mugeraya portrait" className="relative z-10 h-full w-full rounded-[1.5rem] object-cover" loading="eager" />
+            </div>
+            <div className="absolute left-[-4.5rem] top-[-1rem] z-20 hidden md:flex lg:left-[-4.25rem] lg:top-[-1.25rem] flex-col gap-2 rounded-xl border border-border bg-card/70 px-3 py-2 shadow-sm backdrop-blur-sm">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Focus</span>
+              <span className="text-sm font-semibold text-foreground">AI / CV / ML</span>
+            </div>
+            <div className="absolute right-[-1rem] bottom-[-1.25rem] z-20 hidden md:flex lg:right-[-1rem] lg:bottom-[-1rem] flex-col gap-2 rounded-xl border border-border bg-card/70 px-3 py-2 shadow-sm backdrop-blur-sm">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Location</span>
+              <span className="text-sm font-semibold text-foreground">Karkala, Karnataka</span>
             </div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden sm:flex"
-        >
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-xs text-muted-foreground font-medium">Scroll to explore</span>
-            <div className="w-5 h-8 border border-primary/30 rounded-full flex items-start justify-center p-1.5">
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1 h-2 bg-primary rounded-full"
-              />
-            </div>
-          </div>
-        </motion.div>
       </div>
     </motion.div>
   );

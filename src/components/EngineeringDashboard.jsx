@@ -1,63 +1,42 @@
-import React, { memo, useMemo } from "react";
+﻿import React, { memo, useMemo } from "react";
 import { Code2, Zap, Database, Eye, TrendingUp, Award, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
-// --- Animation Variants (The "Staggered Entrance" Pattern) ---
+import { portfolioData } from "../data/portfolioData";
+
 const sectionContainerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
 };
 
 const listContainerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-// --- Feature Card Component ---
-const FeatureCard = React.memo(({ feature }) => (
-  <motion.div
-    variants={itemVariants}
-    whileHover={{ y: -8, boxShadow: "0 30px 60px rgba(0,0,0,0.2)" }}
-    className="group relative bg-card border border-border rounded-2xl p-6 flex flex-col h-full transition-all duration-300 overflow-hidden"
-  >
-    {/* Gradient background */}
+const FeatureCard = memo(({ feature }) => (
+  <motion.div variants={itemVariants} whileHover={{ y: -8 }} className="group relative bg-card border border-border rounded-xl p-6 flex flex-col h-full transition-all duration-300 shadow-sm hover:shadow-lg">
     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-    
-    <div className="relative z-10 flex items-start gap-4 mb-4">
-      <motion.div
-        className="p-3 rounded-lg bg-primary/10 flex-shrink-0"
-        whileHover={{ scale: 1.1, rotate: 5 }}
-      >
+
+    <div className="relative z-10 flex items-start gap-4">
+      <motion.div className="p-3 rounded-lg bg-primary/10 border border-primary/20 flex-shrink-0" whileHover={{ scale: 1.1, rotate: 5 }}>
         <feature.icon className="w-6 h-6 text-primary" />
       </motion.div>
-      <div>
-        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{feature.title}</h3>
+      <div className="flex-grow">
+        <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">{feature.title}</h3>
         <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
       </div>
     </div>
+
     {feature.items && (
       <div className="relative z-10 flex flex-wrap gap-2 mt-4">
         {feature.items.map((item, idx) => (
-          <motion.span
-            key={idx}
-            whileHover={{ scale: 1.05, y: -2 }}
-            className="px-3 py-1 rounded-lg text-xs font-semibold bg-primary/10 text-primary border border-primary/20"
-          >
+          <motion.span key={`${feature.title}-${idx}`} whileHover={{ scale: 1.05 }} className="px-2.5 py-1 rounded-md text-xs font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 transition-colors">
             {item}
           </motion.span>
         ))}
@@ -67,299 +46,108 @@ const FeatureCard = React.memo(({ feature }) => (
 ));
 FeatureCard.displayName = "FeatureCard";
 
-// --- Certificate Card Component ---
-const CertificateCard = memo(({ certificate }) => {
-  const { title, issuer, description, technologies, pdf } = certificate;
-
-  return (
-    <motion.div
-      variants={itemVariants}
-      className="bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 rounded-2xl shadow p-6 flex flex-col h-full hover:shadow-lg transition-shadow duration-300"
-    >
-      {/* Header with Icon */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/10 flex-shrink-0">
-          <Award className="w-6 h-6 text-primary" />
-        </div>
+const CertificateCard = memo(({ certificate }) => (
+  <motion.div variants={itemVariants} whileHover={{ y: -4 }} className="bg-card border border-border rounded-xl shadow-sm p-6 flex flex-col h-full hover:shadow-lg transition-all duration-300">
+    <div className="flex items-start justify-between mb-4">
+      <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-primary/10 border border-primary/20 flex-shrink-0">
+        <Award className="w-6 h-6 text-primary" />
       </div>
+    </div>
 
-      {/* Certificate Title */}
-      <h3 className="text-lg font-semibold text-foreground mb-1 line-clamp-2">
-        {title}
-      </h3>
+    <h3 className="text-base font-bold text-foreground mb-1">{certificate.title}</h3>
+    <p className="text-xs font-semibold text-primary mb-2">{certificate.issuer}</p>
+    <p className="text-xs text-muted-foreground mb-4 flex-grow leading-relaxed">{certificate.description}</p>
 
-      {/* Issuer */}
-      <p className="text-sm font-medium text-primary mb-2">{issuer}</p>
+    {certificate.technologies && certificate.technologies.length > 0 && (
+      <div className="flex flex-wrap gap-2 mb-4">
+        {certificate.technologies.map((tech, idx) => (
+          <span key={`${certificate.title}-${tech}-${idx}`} className="px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary border border-primary/20">{tech}</span>
+        ))}
+      </div>
+    )}
 
-      {/* Description */}
-      <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-2">
-        {description}
-      </p>
-
-      {/* Technologies Badges */}
-      {technologies && technologies.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {technologies.map((tech, idx) => (
-            <span
-              key={idx}
-              className="px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* View Certificate Button */}
-      <a
-        href={pdf}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors duration-200 mt-auto"
-      >
-        <ExternalLink className="w-4 h-4" />
-        View Certificate
-      </a>
-    </motion.div>
-  );
-});
+    <a href={certificate.file} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-xs hover:bg-primary/90 transition-all mt-auto">
+      <ExternalLink className="w-3 h-3" /> View
+    </a>
+  </motion.div>
+));
 CertificateCard.displayName = "CertificateCard";
 
-// --- Event Card Component (for Workshops & Hackathons) ---
-const EventCard = memo(({ event }) => {
-  const { title, description, image, buttonLabel } = event;
-
-  return (
-    <motion.div
-      variants={itemVariants}
-      className="bg-white/90 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 rounded-2xl shadow overflow-hidden flex flex-col h-full hover:shadow-lg transition-shadow duration-300"
-    >
-      {/* Event Image */}
-      <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-        />
-      </div>
-
-      {/* Event Content */}
-      <div className="p-6 flex flex-col flex-grow">
-        {/* Title */}
-        <h3 className="text-lg font-semibold text-foreground mb-2">
-          {title}
-        </h3>
-
-        {/* Description */}
-        <p className="text-sm text-muted-foreground mb-4 flex-grow">
-          {description}
-        </p>
-
-        {/* View Image Button */}
-        <a
-          href={image}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors duration-200 mt-auto"
-        >
-          <ExternalLink className="w-4 h-4" />
-          {buttonLabel}
-        </a>
-      </div>
-    </motion.div>
-  );
-});
+const EventCard = memo(({ event }) => (
+  <motion.div variants={itemVariants} whileHover={{ y: -4 }} className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col h-full hover:shadow-lg transition-all duration-300">
+    <div className="w-full h-40 sm:h-48 overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/5 flex items-center justify-center">
+      <img src={event.image} alt={event.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+    </div>
+    <div className="p-4 sm:p-6 flex flex-col flex-grow">
+      <h3 className="text-base sm:text-lg font-bold text-foreground mb-2">{event.title}</h3>
+      <p className="text-xs sm:text-sm text-muted-foreground mb-4 flex-grow leading-relaxed">{event.description}</p>
+      <a href={event.image} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-xs sm:text-sm hover:bg-primary/90 transition-all mt-auto">
+        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" /> {event.buttonLabel}
+      </a>
+    </div>
+  </motion.div>
+));
 EventCard.displayName = "EventCard";
+
 function EngineeringProfile() {
   const features = useMemo(() => [
-    {
-      icon: Code2,
-      title: "Full-Stack Development",
-      description: "Building scalable web applications with modern tech stacks and best practices.",
-      items: ["React", "Node.js", "Express", "Next.js", "TypeScript"],
-    },
-    {
-      icon: Zap,
-      title: "AI & Machine Learning",
-      description: "Developing intelligent systems using deep learning and computer vision.",
-      items: ["Python", "TensorFlow", "PyTorch", "YOLO", "OpenCV"],
-    },
-    {
-      icon: Database,
-      title: "Backend Engineering",
-      description: "Designing robust APIs and database architectures for production systems.",
-      items: ["FastAPI", "Flask", "MongoDB", "MySQL", "REST APIs"],
-    },
-    {
-      icon: Eye,
-      title: "Computer Vision",
-      description: "Advanced image processing and visual intelligence for real-world applications.",
-      items: ["YOLO", "OpenCV", "Image Processing", "Detection", "OCR"],
-    },
-    {
-      icon: TrendingUp,
-      title: "Problem Solving",
-      description: "Solving real-world problems with efficient algorithms and data structures.",
-      items: ["DSA", "System Design", "Optimization", "Performance"],
-    },
+    { icon: Code2, title: "Full-Stack Development", description: "Building scalable web applications with modern tech stacks and production-oriented practices.", items: ["React", "Node.js", "Express", "Next.js", "TypeScript"] },
+    { icon: Zap, title: "AI & Machine Learning", description: "Developing intelligent systems around deep learning, computer vision, and model-driven product thinking.", items: ["Python", "TensorFlow", "YOLO", "OpenCV", "Machine Learning"] },
+    { icon: Database, title: "Backend Engineering", description: "Designing robust APIs and data-driven systems for practical product requirements.", items: ["FastAPI", "Flask", "MongoDB", "MySQL", "REST APIs"] },
+    { icon: Eye, title: "Computer Vision", description: "Applying detection, recognition, and image-processing methods to real-world tasks.", items: ["YOLO", "OpenCV", "Image Processing", "Detection", "OCR"] },
+    { icon: TrendingUp, title: "Problem Solving", description: "Using structured thinking to solve real-world technical problems with measurable impact.", items: ["DSA", "Optimization", "System Design", "Performance"] },
   ], []);
 
-  const achievements = useMemo(() => [
-    {
-      title: "Selected for NAIN 2.0 Innovation Program",
-      description: "Recognized for innovation and entrepreneurial potential in AI/ML domain",
-    },
-    {
-      title: "₹3.5 Lakh Innovation Funding",
-      description: "Secured funding for AI-based Smart Traffic Congestion Optimization System",
-    },
-    {
-      title: "NSS Volunteer",
-      description: "Active contributor to community service and social initiatives (2023–2026)",
-    },
+  const certificateEntries = useMemo(() => [
+    { title: "IBM AI Literacy", issuer: "IBM", description: "Introduction to AI concepts and practical applications.", technologies: ["AI", "Machine Learning"], file: "/certificates/ai-literacy.pdf" },
+    { title: "Infosys Network Security Fundamentals", issuer: "Infosys", description: "Fundamentals of network security and cybersecurity practice.", technologies: ["Networking", "Cybersecurity"], file: "/certificates/network-security-fundamentals.pdf" },
+    { title: "HTML5", issuer: "Online Certification", description: "Modern HTML5 fundamentals and semantic web development.", technologies: ["HTML5"], file: "/certificates/html5-course.pdf" },
+    { title: "JavaScript", issuer: "Online Certification", description: "JavaScript fundamentals for interactive web development.", technologies: ["JavaScript"], file: "/certificates/javascript-course.pdf" },
+    { title: "Data Science & Generative AI", issuer: "Online Certification", description: "Practical exposure to data science and generative AI workflows.", technologies: ["Data Science", "Generative AI"], file: "/certificates/css-bootstrap-javascript-python.pdf" },
+    { title: "Git & GitHub Workshop", issuer: "Workshop", description: "Hands-on practice with version control and collaborative development.", technologies: ["Git", "GitHub"], file: "/certificates/github.jpeg" },
   ], []);
-
-  const certificatesData = useMemo(
-    () => [
-      {
-        title: "IBM AI Literacy",
-        issuer: "IBM",
-        description: "Comprehensive introduction to Artificial Intelligence concepts and applications",
-        technologies: ["AI", "Machine Learning"],
-        pdf: "/certificates/ai-literacy.pdf",
-      },
-      {
-        title: "Network Security Fundamentals",
-        issuer: "Infosys Springboard",
-        description: "Fundamentals of network security, cybersecurity practices, and protection strategies",
-        technologies: ["Networking", "Cybersecurity"],
-        pdf: "/certificates/network-security-fundamentals.pdf",
-      },
-      {
-        title: "HTML5 Course",
-        issuer: "Online Certification",
-        description: "Master modern HTML5 markup and semantic web development",
-        technologies: ["HTML5"],
-        pdf: "/certificates/html5-course.pdf",
-      },
-      {
-        title: "JavaScript Course",
-        issuer: "Online Certification",
-        description: "In-depth JavaScript programming for interactive web applications",
-        technologies: ["JavaScript"],
-        pdf: "/certificates/javascript-course.pdf",
-      },
-      {
-        title: "Python Practice Course",
-        issuer: "Online Certification",
-        description: "Hands-on Python programming with practical problem-solving exercises",
-        technologies: ["Python"],
-        pdf: "/certificates/python-practice.pdf",
-      },
-      {
-        title: "CSS, Bootstrap & JavaScript",
-        issuer: "Online Certification",
-        description: "Frontend development with responsive design and interactive components",
-        technologies: ["CSS", "Bootstrap", "JavaScript"],
-        pdf: "/certificates/css-bootstrap-javascript-python.pdf",
-      },
-      {
-        title: "Software Engineering & Agile Development",
-        issuer: "Online Certification",
-        description: "Software development lifecycle, agile methodologies, and best practices",
-        technologies: ["Agile", "SDLC", "Software Engineering"],
-        pdf: "/certificates/software-engineering-agile.pdf",
-      },
-    ],
-    []
-  );
 
   const workshopsData = useMemo(() => [
-    {
-      title: "Git & GitHub Workshop",
-      description: "Hands-on workshop on version control, Git fundamentals, and collaborative development on GitHub.",
-      image: "/certificates/github.jpeg",
-      buttonLabel: "View Workshop Image",
-    },
+    { title: "Git & GitHub Workshop", description: "Participated in the Git & GitHub Workshop.", image: "/certificates/github.jpeg", buttonLabel: "View Workshop" },
   ], []);
 
   const hackathonsData = useMemo(() => [
-    {
-      title: "Hackathon Participation",
-      description: "Active participation in competitive hackathon events, showcasing innovation and problem-solving skills.",
-      image: "/certificates/Hockothon.jpeg",
-      buttonLabel: "View Event Image",
-    },
+    { title: "Hackotsava", description: "Participated in Hackotsava.", image: "/certificates/Hockothon.jpeg", buttonLabel: "View Event" },
   ], []);
 
   return (
     <div className="w-full relative px-4 sm:px-8 py-20">
-      <motion.div
-        variants={sectionContainerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="flex flex-col items-center w-full max-w-7xl mx-auto space-y-20"
-      >
-        {/* Header Section */}
-        <motion.div 
-          variants={itemVariants} 
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 mb-6 mx-auto"
-          >
+      <motion.div variants={sectionContainerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="flex flex-col items-center w-full max-w-7xl mx-auto space-y-20">
+        <motion.div variants={itemVariants} className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring", stiffness: 100, damping: 15 }} className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 border border-primary/20 mb-6 mx-auto">
             <Code2 className="w-8 h-8 text-primary" />
           </motion.div>
-          
-          <h2 className="text-5xl sm:text-6xl font-bold mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-              Engineering Profile
-            </span>
+
+          <h2 className="text-section-heading mb-4 sm:mb-6 leading-tight">
+            <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">Engineering Profile</span>
           </h2>
-          
-          <p className="text-lg text-muted-foreground">
-            A comprehensive showcase of my technical expertise, engineering capabilities, achievements, and professional growth across AI/ML, Computer Vision, Backend Engineering, and Full-Stack Development.
-          </p>
+
+          <p className="text-body text-muted-foreground">Focused on AI/ML, computer vision, and full-stack product engineering, with a continued commitment to learning and building practical systems.</p>
         </motion.div>
 
-        {/* Engineering Capabilities Section */}
         <motion.div variants={itemVariants} className="w-full">
-          <motion.div
-            variants={listContainerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full"
-          >
+          <motion.div variants={listContainerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
             {features.map((feature) => (
               <FeatureCard key={feature.title} feature={feature} />
             ))}
           </motion.div>
         </motion.div>
 
-        {/* Key Achievements Section */}
         <motion.div variants={itemVariants} className="w-full">
-          <div className="relative rounded-2xl bg-card border border-border overflow-hidden p-8">
-            {/* Gradient background */}
+          <div className="relative rounded-xl bg-card border border-border overflow-hidden p-6 sm:p-8">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
-            
             <div className="relative z-10">
-              <h3 className="text-2xl font-bold text-foreground mb-8">Key Achievements</h3>
-              <motion.div
-                variants={listContainerVariants}
-                className="grid grid-cols-1 md:grid-cols-3 gap-6"
-              >
-                {achievements.map((achievement, index) => (
-                  <motion.div key={index} variants={itemVariants} className="flex gap-4">
-                    <motion.div
-                      className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2"
-                      whileHover={{ scale: 1.5 }}
-                    />
-                    <div>
-                      <h4 className="font-bold text-foreground">{achievement.title}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">{achievement.description}</p>
-                    </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-8">Achievements</h3>
+              <motion.div variants={listContainerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {portfolioData.achievements.map((achievement, index) => (
+                  <motion.div key={`${achievement}-${index}`} variants={itemVariants} className="flex gap-3">
+                    <motion.div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" whileHover={{ scale: 1.5 }} />
+                    <p className="text-sm text-muted-foreground leading-relaxed">{achievement}</p>
                   </motion.div>
                 ))}
               </motion.div>
@@ -367,49 +155,34 @@ function EngineeringProfile() {
           </div>
         </motion.div>
 
-        {/* Workshops & Training Section */}
-        <motion.div variants={itemVariants} className="w-full max-w-3xl">
-          <motion.div variants={itemVariants} className="text-center mb-8">
-            <h3 className="text-2xl font-semibold text-foreground mb-2">Workshops & Training</h3>
-            <p className="text-muted-foreground">Professional development through hands-on workshops and technical training</p>
+        <motion.div variants={itemVariants} className="w-full">
+          <motion.div variants={itemVariants} className="text-center mb-6">
+            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">Workshops & Training</h3>
           </motion.div>
-          <motion.div
-            variants={listContainerVariants}
-            className="grid grid-cols-1 gap-6"
-          >
+          <motion.div variants={listContainerVariants} className="grid grid-cols-1 gap-6">
             {workshopsData.map((workshop) => (
               <EventCard key={workshop.title} event={workshop} />
             ))}
           </motion.div>
         </motion.div>
 
-        {/* Hackathons & Events Section */}
-        <motion.div variants={itemVariants} className="w-full max-w-3xl">
-          <motion.div variants={itemVariants} className="text-center mb-8">
-            <h3 className="text-2xl font-semibold text-foreground mb-2">Hackathons & Events</h3>
-            <p className="text-muted-foreground">Participation in competitive events and innovation challenges</p>
+        <motion.div variants={itemVariants} className="w-full">
+          <motion.div variants={itemVariants} className="text-center mb-6">
+            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">Hackathons & Events</h3>
           </motion.div>
-          <motion.div
-            variants={listContainerVariants}
-            className="grid grid-cols-1 gap-6"
-          >
+          <motion.div variants={listContainerVariants} className="grid grid-cols-1 gap-6">
             {hackathonsData.map((hackathon) => (
               <EventCard key={hackathon.title} event={hackathon} />
             ))}
           </motion.div>
         </motion.div>
 
-        {/* Certifications Section */}
-        <motion.div variants={itemVariants} className="w-full max-w-5xl">
+        <motion.div variants={itemVariants} className="w-full">
           <motion.div variants={itemVariants} className="text-center mb-8">
-            <h3 className="text-2xl font-semibold text-foreground mb-2">Certifications</h3>
-            <p className="text-muted-foreground">Professional certifications demonstrating continuous learning and skill development</p>
+            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2">Certificates</h3>
           </motion.div>
-          <motion.div
-            variants={listContainerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {certificatesData.map((certificate) => (
+          <motion.div variants={listContainerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {certificateEntries.map((certificate) => (
               <CertificateCard key={certificate.title} certificate={certificate} />
             ))}
           </motion.div>
@@ -419,4 +192,4 @@ function EngineeringProfile() {
   );
 }
 
-export default React.memo(EngineeringProfile);
+export default memo(EngineeringProfile);
